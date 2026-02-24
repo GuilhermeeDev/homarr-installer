@@ -38,5 +38,10 @@ services:
     ports:
       - "7575:7575"
 EOF
+
+# Adicionando o usuário ao grupo docker para evitar a necessidade de sudo
+sudo usermod -aG docker $USER
 clear
-echo "Rode: docker compose up -d"
+echo "Reinicie o servidor e faça login novamente para aplicar as mudanças de grupo."
+time 3
+# sudo reboot 
