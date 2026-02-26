@@ -90,7 +90,7 @@ x-defaults: &defaults
 # ---- SERVIÇOS ---- #
 services:
 
-# HOMARR - 22.12.0-alpine
+# HOMARR
 
   homarr:
     <<: *defaults
@@ -261,7 +261,7 @@ x-defaults: &defaults
 # ---- SERVIÇOS ---- #
 services:
 
-# HOMARR - 22.12.0-alpine
+# HOMARR
 
   homarr:
     <<: *defaults
@@ -342,21 +342,10 @@ mkdir -p homelab
 mkdir -p homelab/data
 mkdir -p homelab/media
 mkdir -p homelab/backups
-mkdir -p homelab/data/homarr/appdata
-mkdir -p homelab/data/gitea
-mkdir -p homelab/data/duplicati
-mkdir -p homelab/data/nginx
+mkdir -p homelab/data/nginx-proxy-manager
 mkdir -p homelab/data/letsencrypt
-mkdir -p homelab/data/pihole
-mkdir -p homelab/data/immich
-mkdir -p homelab/data/immich/immich-db
-mkdir -p homelab/data/jellyfin
-mkdir -p homelab/data/nextcloud
 mkdir -p homelab/data/uptime-kuma
 mkdir -p homelab/data/portainer
-mkdir -p homelab/data/nextcloud/postgres_nextcloud
-mkdir -p homelab/data/nextcloud/redis_nextcloud
-mkdir -p homelab/data/nextcloud/html
 
 mv docker-compose.yml homelab/
 mv .env homelab/
