@@ -42,14 +42,12 @@ services:
     ports:
       - "${HOMARR_PORT}:7575"
 
-    env_file:
-      - env/.env.homarr
-
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/homarr:/appdata
 
     environment:
+      - TZ=${TZ}
       - SECRET_ENCRYPTION_KEY=${HOMARR_SECRET_KEY}
 
     mem_limit: 512MB
@@ -60,11 +58,9 @@ services:
     <<: *defaults
     image: portainer/portainer-ce:2.38.1-linux-amd64-alpine
     container_name: portainer
+    
     ports:
       - "${PORTAINER_PORT}:9000"
-
-    env_file:
-      - /env/.env.portainer
 
     environment:
       - TZ=${TZ}
@@ -81,11 +77,9 @@ services:
     <<: *defaults
     image: louislam/uptime-kuma:2-slim
     container_name: uptime-kuma
+
     ports:
       - "${UPTIME-KUMA_PORT}:3001"
-
-    env_file:
-      - /env/.env.uptime-kuma
 
     environment:
       - TZ=${TZ}
@@ -101,13 +95,11 @@ services:
     <<: *defaults
     image: jc21/nginx-proxy-manager:2
     container_name: nginx-proxy
+    
     ports:
       - "${NGINX_PROXY_MANAGER_PORT1}:80"
       - "${NGINX_PROXY_MANAGER_PORT2}:81"
       - "${NGINX_PROXY_MANAGER_PORT3}:443"
-
-    env_file:
-      - /env/.env.nginx-proxy-manager
 
     environment:
       - TZ=${TZ}
@@ -121,19 +113,18 @@ services:
 
 # FILEBROWSER
   filebrowser:
+    <<: *defaults
     image: filebrowser/filebrowser:v2-amd64-s6
     container_name: filebrowser
-    ports:
-      - ${FILEBROWSER_PORT}:80
-
-    env_file:
-      - /env/.env.filebrowser
     
+    ports:
+      - ${FILEBROWSER_PORT}:1200
+
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
+      PUID: ${FILEBROWSER_PUID}
+      PGID: ${FILEBROWSER_PGID}
     
     volumes:
-      - /home/user:/srv
-      - /home/user/appdata/filebrowser:/database
-      - /home/user/appdata/filebrowser:/config
+      - /home/${FILEBROWSER_USER}:/srv
+      - ./data/filebrowser/database:/database
+      - ./data/filebrowser/config:/config
