@@ -25,15 +25,6 @@ Faça um `fork` deste projeto e fique avontade para customizar o seu próprio do
 
 ---
 
-### Especificações do Servidor
-
-| Recurso | Configuração |
-|--------|-------------|
-| Sistema Operacional | Ubuntu Server 24.4.4 LTS |
-| CPU | 12 Cores / 24 Threads |
-| RAM | 8 GB |
-
-
 ### Serviços Utilizados
 
 | Serviço | Função |
@@ -41,13 +32,9 @@ Faça um `fork` deste projeto e fique avontade para customizar o seu próprio do
 | Homarr | Dashboard do Home Lab |
 | Portainer | Gerenciamento de containers |
 | Nginx Proxy Manager | Reverse Proxy |
-| Jellyfin | Media Server |
 | Uptime Kuma | Monitoramento de uptime |
-| Nextcloud | Armazenamento em nuvem |
-| Immich | Armazenamento de fotos|
 | Pihole | DNS e bloqueador de anuncio|
 |Wireguard | VPN |
-|Duplicate Backup | Backups em volumes|
 |Gitea | GitHub pessoal|
 | FileBrowser | Gerenciador de arquivos |
 
