@@ -19,6 +19,9 @@ networks:
   homeserver:
     name: homeserver
     driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
 
 x-defaults: &defaults
   restart: unless-stopped
@@ -49,7 +52,7 @@ services:
 
     environment:
       - TZ=${TZ}
-      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
+      - SECRET_ENCRYPTION_KEY=${HOMARR_SECRET_ENCRYPTION_KEY}
       - PUID=${HOMARR_PUID}
       - PGID=${HOMARR_PGID}
 
@@ -147,10 +150,10 @@ services:
 
     environment:
       TZ: ${TZ}
-      USER_UID: 1000
-      USER_GID: 1000    
-      GITEA__database__DB_TYPE: postgres
-      GITEA__database__HOST: gitea_database:5432
+      USER_UID: ${GITEA_UID}
+      USER_GID: ${GITEA_GID}
+      GITEA__database__DB_TYPE: ${GITEA_DATABASE_TYPE}
+      GITEA__database__HOST: ${GITEA_DATABASE_HOST}
       GITEA__database__NAME: ${GITEA_DATABASE_NAME}
       GITEA__database__USER: ${GITEA_DATABASE_USER}
       GITEA__database__PASSWD: ${GITEA_DATABASE_PASSWORD}
@@ -179,12 +182,49 @@ services:
       POSTGRES_DB: ${GITEA_DATABASE_NAME}
       POSTGRES_USER: ${GITEA_DATABASE_USER}
       POSTGRES_PASSWORD: ${GITEA_DATABASE_PASSWORD}
-    
+
     volumes:
       - ./data/gitea_database:/var/lib/postgresql/data
 
     mem_limit: 512MB
     cpus: '1.0'
 
-# PIHOLE
+# PIHOLE 
+  pihole:
+    <<: *defaults
+    container_name: pihole
+    image: pihole/pihole:2026.02.0
+
+    ports:
+      - "${PIHOLE_TCP53_PORT}:53/tcp"
+      - "${PIHOLE_UDP53_PORT}:53/udp"
+      - "${PIHOLE_TCP80_PORT}:80/tcp"
+      - "${PIHOLE_TCP443_PORT}:443/tcp"
+
+    environment:
+      TZ: ${TZ}
+      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
+      FTLCONF_dns_listeningMode: ${PIHOLE_FTLCONF_DNS}
+      DNSMASQ_LISTENING: ${PIHOLE_DNSMASQ_LISTENING}
+      DNSSEC: ${PIHOLE_DNSSEC}
+      DNS_FQDN_REQUIRED: ${PIHOLE_DNS_FQDN_REQUIRED}
+      DNS_BOGUS_PRIV: ${PIHOLE_DNS_BOGUS_PRIV}
+      WEBTHEME: "default-dark"
+
+    volumes:
+      - '.data/pihole/etc-pihole:/etc/pihole'
+      - ./data/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+
+    mem_limit: 512MB
+    cpus: '1.0'
+
+    cap_add:
+      - NET_ADMIN
+      - SYS_TIME
+      - SYS_NICE
+
+    networks:
+      homeserver:
+        ipv4_address: 192.168.100.222
+
 # WIREGUARD
