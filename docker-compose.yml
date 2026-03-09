@@ -228,3 +228,31 @@ services:
         ipv4_address: 192.168.100.222
 
 # WIREGUARD
+  wireguard:
+    <<: *defaults
+    image: linuxserver/wireguard:amd64-1.0.20250521
+    container_name: wireguard
+
+    ports:
+      - ${WIREGUARD_PORT}:51820/udp
+
+    environment:
+      TZ: ${TZ}
+      PUID: ${WIREGUARD_PUID}
+      PGID: ${WIREGUARD_PGID}
+      SERVERURL: your.server.com
+      SERVERPORT: ${WIREGUARD_PORT}
+      PEERS: 3
+      PEERDNS: auto
+      INTERNAL_SUBNET: ${INTERNAL_SUBNET}
+
+    volumes:
+      - ./data/wireguard/config:/config
+      - ./data/wireguard/lib:/lib/modules:ro
+
+    mem_limit: 512MB
+    cpus: '1.0'
+
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1
