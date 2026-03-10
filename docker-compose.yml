@@ -59,6 +59,10 @@ services:
     mem_limit: 512MB
     cpus: '1.0'
 
+    networks:
+      homeserver:
+        ipv4_address: ${HOMARR_IP}
+
 # PORTAINER
   portainer:
     <<: *defaults
@@ -69,7 +73,7 @@ services:
       - "${PORTAINER_PORT}:9000"
 
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -77,6 +81,10 @@ services:
     
     mem_limit: 512MB
     cpus: '1.0'
+
+    networks:
+      homeserver:
+        ipv4_address: ${PORTAINER_IP}
 
 # UPTIME-KUMA
   uptime-kuma:
@@ -88,13 +96,17 @@ services:
       - "${UPTIMEKUMA_PORT}:3001"
 
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
 
     volumes:
       - ./data/uptime-kuma:/app/data
     
     mem_limit: 256MB
     cpus: '1.0'
+
+    networks:
+      homeserver:
+        ipv4_address: ${UPTIME_KUMA_IP}
 
 # NGINX PROXY MANAGER
   nginx-proxy:
@@ -108,7 +120,7 @@ services:
       - "${NGINX_PROXY_MANAGER_PORT3}:443"
 
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
 
     volumes:
       - ./data/nginx-proxy-manager:/data
@@ -116,6 +128,10 @@ services:
     
     mem_limit: 512MB
     cpus: '1.0'
+
+    networks:
+      homeserver:
+        ipv4_address: ${NPM_IP}
 
 # FILEBROWSER
   filebrowser:
@@ -137,6 +153,10 @@ services:
 
     mem_limit: 512MB
     cpus: '1.0'
+
+    networks:
+      homeserver:
+        ipv4_address: ${FILEBROWSER_IP}
 
 # GITEA
   gitea:
@@ -166,6 +186,10 @@ services:
     mem_limit: 512MB
     cpus: '1.0'
 
+    networks:
+      homeserver:
+        ipv4_address: ${GITEA_IP}
+
     depends_on:
       - gitea_database
 
@@ -188,6 +212,10 @@ services:
 
     mem_limit: 512MB
     cpus: '1.0'
+
+    networks:
+      homeserver:
+        ipv4_address: ${GITEA_DB_IP}
 
 # PIHOLE 
   pihole:
@@ -218,14 +246,14 @@ services:
     mem_limit: 512MB
     cpus: '1.0'
 
+    networks:
+      homeserver:
+        ipv4_address: ${PIHOLE_IP}
+
     cap_add:
       - NET_ADMIN
       - SYS_TIME
       - SYS_NICE
-
-    networks:
-      homeserver:
-        ipv4_address: 192.168.100.222
 
 # WIREGUARD
   wireguard:
@@ -240,7 +268,7 @@ services:
       TZ: ${TZ}
       PUID: ${WIREGUARD_PUID}
       PGID: ${WIREGUARD_PGID}
-      SERVERURL: your.server.com
+      SERVERURL: ${WIREGUARD_URL}
       SERVERPORT: ${WIREGUARD_PORT}
       PEERS: 3
       PEERDNS: auto
@@ -252,6 +280,10 @@ services:
 
     mem_limit: 512MB
     cpus: '1.0'
+
+    networks:
+      homeserver:
+        ipv4_address: ${WIREGUARD_IP}
 
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
