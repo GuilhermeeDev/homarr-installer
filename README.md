@@ -53,23 +53,21 @@ cd homeserver-docker
 ```
 
 rode o script de configuração inicial do projeto
+
 ```
 ./setup.sh
 ```
 
-baixando os containeres do docker-compose
+baixando e subindo os containeres do docker-compose.yml
+
 ```
-docker compose up -d
+docker compose up 
 ```
 
-subindo os containeres do docker-compose
-```
-docker compose up
-```
 ---
 
 ## Como acessar?
-A princípio o seu painel de administrador roda por padrão na porta `7575` definida no `.env` da raiz do seu servidor.
+A princípio o seu painel de administrador `Homarr` roda por padrão na porta `7575` definida no `.env` da raiz do seu servidor.
 
 descubra o ip do seu servidor
 ```bash
