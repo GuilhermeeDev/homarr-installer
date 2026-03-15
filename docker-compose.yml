@@ -38,8 +38,9 @@ x-defaults: &defaults
       max-size: "50MB"
       max-file: "5"
   
-  # security_opt: 
-  #   - no-new-privileges:true
+  security_opt:
+  # Evitar que o serviço ganhe mais privilegios posteriormente, após a inicialização 
+    - no-new-privileges:true
 
   # init: true
 
@@ -66,9 +67,9 @@ services:
     mem_limit: 256MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${HOMARR_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${HOMARR_IP}
 
 # PORTAINER
   portainer:
@@ -89,9 +90,9 @@ services:
     mem_limit: 256MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${PORTAINER_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${PORTAINER_IP}
 
 # UPTIME-KUMA
   uptime-kuma:
@@ -111,9 +112,9 @@ services:
     mem_limit: 256MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${UPTIME_KUMA_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${UPTIME_KUMA_IP}
 
 # NGINX PROXY MANAGER
   nginx-proxy:
@@ -136,9 +137,9 @@ services:
     mem_limit: 256MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${NPM_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${NPM_IP}
 
 # FILEBROWSER
   filebrowser:
@@ -161,9 +162,9 @@ services:
     mem_limit: 512MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${FILEBROWSER_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${FILEBROWSER_IP}
 
 # GITEA
   gitea:
@@ -193,9 +194,9 @@ services:
     mem_limit: 412MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${GITEA_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${GITEA_IP}
 
     depends_on:
       - gitea_database
@@ -220,9 +221,9 @@ services:
     mem_limit: 256MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${GITEA_DB_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${GITEA_DB_IP}
 
 # PIHOLE 
   pihole:
@@ -253,9 +254,9 @@ services:
     mem_limit: 256MB
     cpus: '1.0'
 
-    # networks:
-    #   homeserver:
-    #     ipv4_address: ${PIHOLE_IP}
+    networks:
+      homeserver:
+        ipv4_address: ${PIHOLE_IP}
 
     cap_add:
       - NET_ADMIN
@@ -263,3 +264,27 @@ services:
       - SYS_NICE
 
 # WG-EASY
+  wg-easy:
+    <<: *defaults
+    container_name: wg-easy
+    image: weejewel/wg-easy:7
+
+    ports:
+      - "${WG_PORT_UPD}:51820/udp"
+      - "${WG_PORT_TCP}:51821/tcp"
+
+    environment:
+      PASSWORD: ${WG_PASSWORD}
+      WG_HOST: ${WG_IP}
+
+    volumes:
+      - ./data/wg-easy/:/etc/wg-easy
+      - /lib/modules:/lib/modules
+
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
